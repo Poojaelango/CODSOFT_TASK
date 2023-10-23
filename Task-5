@@ -1,0 +1,79 @@
+import tkinter as tk
+# In-memory storage for contacts
+contacts = []
+# Function to add a new contact
+def add_contact():
+    name = name_entry.get()
+    phone = phone_entry.get()
+    email = email_entry.get()
+    address = address_entry.get()
+    contacts.append({"Name": name, "Phone": phone, "Email": email, "Address": address})
+    update_contact_list()
+
+# Function to update the displayed contact list
+def update_contact_list():
+    contact_list.delete(0, tk.END)
+    for contact in contacts:
+        contact_list.insert(tk.END, contact["Name"] + " - " + contact["Phone"])
+
+# Function to search for a contact by name or phone number
+def search_contact():
+    search_term = search_entry.get()
+    matching_contacts = [contact for contact in contacts if search_term in contact["Name"] or search_term in contact["Phone"]]
+    contact_list.delete(0, tk.END)
+    for contact in matching_contacts:
+        contact_list.insert(tk.END, contact["Name"] + " - " + contact["Phone"])
+
+# Function to delete a contact
+def delete_contact():
+    selected_contact = contact_list.get(tk.ACTIVE)
+    if selected_contact:
+        contact_name = selected_contact.split(" - ")[0]
+        contacts[:] = [contact for contact in contacts if contact["Name"] != contact_name]
+        update_contact_list()
+
+# Create the main window
+root = tk.Tk()
+root.title("Contact Book")
+
+# Create and place GUI elements
+name_label = tk.Label(root, text="Name:")
+name_label.pack()
+name_entry = tk.Entry(root)
+name_entry.pack()
+
+phone_label = tk.Label(root, text="Phone:")
+phone_label.pack()
+phone_entry = tk.Entry(root)
+phone_entry.pack()
+
+email_label = tk.Label(root, text="Email:")
+email_label.pack()
+email_entry = tk.Entry(root)
+email_entry.pack()
+
+address_label = tk.Label(root, text="Address:")
+address_label.pack()
+address_entry = tk.Entry(root)
+address_entry.pack()
+
+add_button = tk.Button(root, text="Add Contact(^_^)", bg="pale green", command=add_contact)
+add_button.pack()
+
+search_label = tk.Label(root, text="Search:")
+search_label.pack()
+search_entry = tk.Entry(root)
+search_entry.pack()
+
+search_button = tk.Button(root, text="Search", bg="lightblue", command=search_contact)
+search_button.pack()
+
+delete_button = tk.Button(root, text="Delete Contact  (-_-)", bg="red", command=delete_contact)
+delete_button.pack()
+
+contact_list = tk.Listbox(root)
+contact_list.pack()
+
+update_contact_list()
+
+root.mainloop()
